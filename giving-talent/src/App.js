@@ -8,8 +8,8 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const sheetID = process.env.REACT_APP_GOOGLE_SHEET_ID; // Replace with your Google Sheet ID
-      const apiKey = process.env.REACT_APP_GOOGLE_API_KEY; // Replace with your Google Sheets API Key
+      const sheetID = process.env.REACT_APP_GOOGLE_SHEET_ID;
+      const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
       const range = 'Sheet1';
 
       const response = await axios.get(
@@ -26,15 +26,6 @@ function App() {
     <div className="App">
       <h1>Google Sheets Data</h1>
       <table>
-        <thead>
-          <tr>
-            <th>Column 1</th>
-            <th>Column 2</th>
-            <th>Column 3</th>
-            <th>Column 4</th>
-            <th>Column 5</th>
-          </tr>
-        </thead>
         <tbody>
           {data.map((row, index) => (
             <tr key={index}>
