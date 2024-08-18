@@ -33,26 +33,34 @@ type Marker = {
 
 type Talent = {
   name: string;
-  event: string;
+  email: string;
+  number: string;
+  age: string;
+  countryOg: string;
+  countryTrained: string;
+  volunteerHours: string;
+  eventType: string;
   talent: string;
 };
-const arr: Talent[] = [
-  {
-    name: "Ikenna",
-    event: "Community engagement",
-    talent: "Cleaning",
-  },
-  {
-    name: "Blessing",
-    event: "Caring for the sick",
-    talent: "Driving",
-  },
-  {
-    name: "Josh",
-    event: "HACKVAN",
-    talent: "database",
-  },
-];
+
+//TODO: Delete after get api works
+// const arr: Talent[] = [
+//   {
+//     name: "Ikenna",
+//     event: "Community engagement",
+//     talent: "Cleaning",
+//   },
+//   {
+//     name: "Blessing",
+//     event: "Caring for the sick",
+//     talent: "Driving",
+//   },
+//   {
+//     name: "Josh",
+//     event: "HACKVAN",
+//     talent: "database",
+//   },
+// ];
 const Home = () => {
   const [viewState, setViewState] = useState({
     longitude: -123.116226,
@@ -64,6 +72,10 @@ const Home = () => {
   const [totalEvents, setTotalEvents] = useState<number | null>(null);
 
   const [mapData, setMapData] = useState<any | null>(null);
+  const [selectedMarker, setSelectedMarker] = useState<any | null>(null);
+  const [talents, setTalents] = useState<Talent[]>([]);
+  const [filteredTalents, setFilteredTalents] = useState<Talent[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +91,42 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const [selectedMarker, setSelectedMarker] = useState<any | null>(null);
+  useEffect(() => {
+    const fetchAllTalents = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/volunteers');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setTalents(data);
+        setFilteredTalents(data); // Initially show all talents
+      } catch (error) {
+        console.error('Error fetching talents:', error);
+      }
+    };
+
+    fetchAllTalents();
+  }, []);
+
+  useEffect(() => {
+    const fetchFilteredTalents = async () => {
+      if (!searchQuery) {
+        setFilteredTalents(talents); // If no search query, show all talents
+        return;
+      }
+
+      try {
+        const query = `?talent=${encodeURIComponent(searchQuery)}`;
+        const response = await fetch(`http://localhost:8080/volunteers${query}`); // Fetch filtered talents
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setFilteredTalents(data);
+      } catch (error) {
+        console.error('Error fetching filtered talents:', error);
+      }
+    };
+
+    fetchFilteredTalents();
+  }, [searchQuery, talents]); // Trigger fetch when searchQuery or talents changes
 
   return (
     <div className="w-screen h-screen flex flex-col gap-7 px-10 py-10">
@@ -88,18 +135,26 @@ const Home = () => {
           <div className="flex flex-row gap-2">
             <Input
               type="search"
-              placeholder="Search volunteer"
+              placeholder="Search by talent"
               className="w-44"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Button variant="outline">Send</Button>
           </div>
 
           <div className="flex flex-col gap-3 pt-8">
-            {arr.map((talent) => (
-              <div className="flex flex-col gap-2 shadow-md p-3 rounded-lg">
+            {filteredTalents.map((talent, index) => (
+              <div key={talent.name} className="flex flex-col gap-2 shadow-md p-3 rounded-lg">
                 <img src={p1} className="w-72 object-cover h-32"></img>
                 <h2>{talent.name}</h2>
-                <h2>{talent.event}</h2>
+                <h3>Email: {talent.email}</h3>
+                <h3>Number: {talent.number}</h3>
+                <h3>Age: {talent.age}</h3>
+                <h3>Country of Origin: {talent.countryOg}</h3>
+                <h3>Country Trained: {talent.countryTrained}</h3>
+                <h3>Volunteer Hours: {talent.volunteerHours}</h3>
+                <h3>Event Type: {talent.eventType}</h3>
                 <Button variant={"outline"} className="w-fit">
                   Reach out
                 </Button>

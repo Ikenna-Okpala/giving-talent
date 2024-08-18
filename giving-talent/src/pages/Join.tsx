@@ -21,6 +21,7 @@ type FormData = {
   countryTrained: string;
   volunteerHours: string;
   eventType: string;
+  talent: string;
 };
 
 const JoinVolunteer = () => {
@@ -35,6 +36,7 @@ const JoinVolunteer = () => {
     countryTrained: "",
     eventType: "",
     volunteerHours: "",
+    talent: "",
   });
 
   const [notification, setNotification] = useState<{ type: string; message: string } | null>(null);
@@ -53,7 +55,7 @@ const JoinVolunteer = () => {
     console.log("Form data to be submitted:", JSON.stringify(formData, null, 2));
     // Perform POST request to your API
     try {
-      const response = await fetch("/api/volunteer", {
+      const response = await fetch("http://localhost:8080/volunteers", { //TODO: correct api endpoint
         method: "POST",
         headers: {
           "Content-Type": "application/json",
