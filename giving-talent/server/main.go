@@ -19,8 +19,6 @@ func main() {
 
 	app.Get("/volunteers/:talent", h.SearchVolunteer)
 
-	
 
-
-	app.Listen("localhost:8080")
+	app.Listen(":8080")
 }
