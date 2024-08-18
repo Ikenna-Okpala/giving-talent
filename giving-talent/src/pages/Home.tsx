@@ -58,7 +58,7 @@ const getCoordinatesForCountry = (country: string): [number, number] => {
     "Australia": [133.7751, -25.2744],
     // Add more countries as needed
   };
-  return countryCoordinates[country] || [-120, 37]; // Default merica if country not found
+  return countryCoordinates[country] || [49, 123]; // Default to Vancouver if country not found
 };
 
 const Home = () => {
@@ -191,20 +191,6 @@ const Home = () => {
           {markers}
 
           {selectedMarker && (
-          //   <Popup
-          //   className="p-0"
-          //   longitude={selectedMarker.geometry.coordinates[0]}
-          //   latitude={selectedMarker.geometry.coordinates[1]}
-          //   anchor="top"
-          //   onClose={() => setSelectedMarker(null)}
-          // >
-          //   <div className="flex flex-col gap-3">
-          //     <img src={p1} className="w-72 object-cover h-32"></img>
-
-          //     <div className="flex flex-col gap-2">
-          //       <h2>{selectedMarker.properties.name}</h2>
-          //       <h2>{`${selectedMarker.properties.pledges} pledged`}</h2>
-          //     </div>
             <Popup
             className="p-0"
             longitude={getCoordinatesForCountry(selectedMarker.countryOrigin)[0]}
