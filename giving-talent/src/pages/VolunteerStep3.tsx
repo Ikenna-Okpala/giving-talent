@@ -1,16 +1,36 @@
 import { Input } from "../@/components/ui/input";
 import { Label } from "../@/components/ui/label";
 
-const VolunteerStep3 = () => {
+type Props = {
+  formData: {
+    volunteerHours: string;
+    eventType: string;
+  };
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const VolunteerStep3 = ({ formData, handleInputChange }: Props) => {
   return (
     <div className="flex flex-col w-full gap-4">
       <div className="flex flex-col space-y-1.5">
         <Label htmlFor="hours">Hours to volunteer</Label>
-        <Input id="hours" placeholder="Hours to volunteer:" />
+        <Input
+          id="volunteerHours"
+          name="volunteerHours"
+          value={formData.volunteerHours}
+          placeholder="Hours to volunteer:"
+          onChange={handleInputChange}
+        />
       </div>
       <div className="flex flex-col space-y-1.5">
         <Label htmlFor="eventType">Event type</Label>
-        <Input id="eventType" placeholder="Event type:" />
+        <Input
+          id="eventType"
+          name="eventType"
+          value={formData.eventType}
+          placeholder="Event type:"
+          onChange={handleInputChange}
+        />
       </div>
     </div>
   );
