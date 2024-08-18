@@ -5,6 +5,7 @@ type Props = {
   formData: {
     volunteerHours: string;
     eventType: string;
+    talent: string;
   };
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -29,6 +30,16 @@ const VolunteerStep3 = ({ formData, handleInputChange }: Props) => {
           name="eventType"
           value={formData.eventType}
           placeholder="Event type:"
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className="flex flex-col space-y-1.5">
+        <Label htmlFor="talent">Talent</Label>
+        <Input
+          id="talent"
+          name="talent"
+          value={formData.talent}
+          placeholder="Talent:"
           onChange={handleInputChange}
         />
       </div>
