@@ -1,6 +1,6 @@
 module github.com/Ikenna-Okpala/giving-talent
 
-go 1.22.2
+go 1.22
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect

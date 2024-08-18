@@ -1,0 +1,14 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/cmpt-474-group-project/<cloudrun-service-name>",
+        ".",
+        "-f",
+        "Dockerfile",
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/cmpt-474-group-project/giving-talent"]
