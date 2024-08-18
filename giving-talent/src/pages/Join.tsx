@@ -37,6 +37,8 @@ const JoinVolunteer = () => {
     volunteerHours: "",
   });
 
+  const [notification, setNotification] = useState<{ type: string; message: string } | null>(null);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -45,10 +47,31 @@ const JoinVolunteer = () => {
   const nextStep = () => setStep((prevStep) => prevStep + 1);
   const prevStep = () => setStep((prevStep) => prevStep - 1);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("form submitted");
+    console.log("Form data to be submitted:", JSON.stringify(formData, null, 2));
+    // Perform POST request to your API
+    try {
+      const response = await fetch("/api/volunteer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setNotification({ type: "success", message: "Form submitted successfully!" });
+      } else {
+        setNotification({ type: "error", message: "Form submission failed. Please try again." });
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "An error occurred while submitting the form." });
+      // Handle network errors or other issues
+    }
   };
+
   return (
     <div className="flex flex-col justify-center items-center w-screen h-screen">
       <Card className="w-[600px]">
@@ -58,11 +81,9 @@ const JoinVolunteer = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={submit}>
-            {step === 1 && <VolunteerStep1 />}
-
-            {step === 2 && <VolunteerStep2 />}
-
-            {step === 3 && <VolunteerStep3 />}
+            {step === 1 && <VolunteerStep1 formData={formData} handleInputChange={handleInputChange} />}
+            {step === 2 && <VolunteerStep2 formData={formData} handleInputChange={handleInputChange} />}
+            {step === 3 && <VolunteerStep3 formData={formData} handleInputChange={handleInputChange} />}
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
@@ -83,6 +104,11 @@ const JoinVolunteer = () => {
           )}
         </CardFooter>
       </Card>
+      {notification && (
+        <div className={`mt-4 p-4 text-white ${notification.type === "success" ? "bg-green-500" : "bg-red-500"} rounded`}>
+          {notification.message}
+        </div>
+      )}
     </div>
   );
 };
