@@ -48,3 +48,21 @@ func (h Handler) GetVolunteers(c *fiber.Ctx) error {
 
 	return c.JSON(volunteers)
 }
+
+func (h Handler) SearchVolunteer(c *fiber.Ctx) error {
+
+	talent:= c.Params("talent")
+
+	var volunteers Volunteer
+
+	fmt.Println(talent)
+
+	result:= h.db.Where("talent = ?", talent).Find(&volunteers)
+
+	if result.Error != nil{
+		fmt.Println(result.Error)
+		return fiber.NewError(fiber.StatusInternalServerError, "Server failure")
+	}
+
+	return c.JSON(volunteers)
+}
