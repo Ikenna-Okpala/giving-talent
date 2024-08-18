@@ -10,6 +10,10 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Map, { Marker, Popup } from "react-map-gl";
 import geojson from "../geojson.json";
+import {
+  fetchGoogleSheetsData,
+  GoogleSheetData,
+} from "../services/googleSheetsService";
 
 type Marker = {
   type: string;
@@ -29,6 +33,25 @@ const Home = () => {
     zoom: 9,
   });
 
+  const [totalHours, setTotalHours] = useState<number | null>(null);
+  const [totalEvents, setTotalEvents] = useState<number | null>(null);
+
+  const [mapData, setMapData] = useState<any | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const sheetData = await fetchGoogleSheetsData();
+
+      console.log("sheetData:", sheetData);
+
+      setTotalHours(sheetData.totalHours);
+      setTotalEvents(sheetData.totalEvents);
+      setMapData(sheetData.geoJSON);
+    };
+
+    fetchData();
+  }, []);
+
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
 
   return (
@@ -41,14 +64,14 @@ const Home = () => {
             <CardTitle>Total Hours</CardTitle>
           </CardHeader>
 
-          <CardContent>2000</CardContent>
+          <CardContent>{totalHours}</CardContent>
         </Card>
         <Card className="w-64 p-2 h-32 rounded-3xl shadow-sm">
           <CardHeader>
             <CardTitle>Total Events</CardTitle>
           </CardHeader>
 
-          <CardContent>15</CardContent>
+          <CardContent>{totalEvents}</CardContent>
         </Card>
       </div>
 
@@ -60,7 +83,7 @@ const Home = () => {
           mapStyle={"mapbox://styles/mapbox/standard"}
           mapboxAccessToken="pk.eyJ1IjoidGVjaC1zbWFydCIsImEiOiJjbDRkb3N1ZmUwNnVyM2NvNGJvZm5zbGgyIn0.20vn-YbuIy33qBQ5s9-Jeg"
         >
-          {geojson.features.map((feature, index) => (
+          {mapData?.features.map((feature: any, index: any) => (
             <Marker
               key={index}
               longitude={feature.geometry.coordinates[0]}
