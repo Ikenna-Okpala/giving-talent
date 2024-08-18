@@ -25,9 +25,7 @@ func (h Handler) CreateVolunteer(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid volunteer parameters")
 	}
 
-	newVolunteer := new(Volunteer)
-
-	result := h.db.Create(&newVolunteer)
+	result := h.db.Create(&volunteer)
 
 	if result.Error != nil {
 		fmt.Println(result.Error)
