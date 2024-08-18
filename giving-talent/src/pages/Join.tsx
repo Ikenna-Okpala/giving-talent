@@ -17,7 +17,7 @@ type FormData = {
   email: string;
   number: string;
   age: string;
-  countryOg: string;
+  countryOrigin: string;
   countryTrained: string;
   volunteerHours: string;
   eventType: string;
@@ -32,7 +32,7 @@ const JoinVolunteer = () => {
     email: "",
     number: "",
     age: "",
-    countryOg: "",
+    countryOrigin: "",
     countryTrained: "",
     eventType: "",
     volunteerHours: "",
