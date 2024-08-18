@@ -15,6 +15,8 @@ func main() {
 
 	app.Use(cors.New())
 
+	app.Post("/volunteers", h.CreateVolunteer)
+
 	app.Get("/volunteers", h.GetVolunteers)
 
 	app.Get("/volunteers/:talent", h.SearchVolunteer)
