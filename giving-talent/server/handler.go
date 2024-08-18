@@ -53,16 +53,16 @@ func (h Handler) SearchVolunteer(c *fiber.Ctx) error {
 
 	talent:= c.Params("talent")
 
-	var volunteers Volunteer
+	var volunteers [] Volunteer
 
-	fmt.Println(talent)
-
-	result:= h.db.Where("talent = ?", talent).Find(&volunteers)
+	result:= h.db.Find(&volunteers, "talent = ?", talent)
 
 	if result.Error != nil{
 		fmt.Println(result.Error)
 		return fiber.NewError(fiber.StatusInternalServerError, "Server failure")
 	}
+
+	fmt.Println(volunteers)
 
 	return c.JSON(volunteers)
 }
