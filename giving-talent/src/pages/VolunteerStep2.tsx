@@ -4,7 +4,7 @@ import { Label } from "../@/components/ui/label";
 type Props = {
   formData: {
     age: string;
-    countryOg: string;
+    countryOrigin: string;
     countryTrained: string;
   };
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -24,11 +24,11 @@ const VolunteerStep2 = ({ formData, handleInputChange }: Props) => {
         />
       </div>
       <div className="flex flex-col space-y-1.5">
-        <Label htmlFor="countryOg">Country of origin</Label>
+        <Label htmlFor="countryOrigin">Country of origin</Label>
         <Input
-          id="countryOg"
-          name="countryOg"
-          value={formData.countryOg}
+          id="countryOrigin"
+          name="countryOrigin"
+          value={formData.countryOrigin}
           placeholder="Country of origin:"
           onChange={handleInputChange}
         />

@@ -36,31 +36,31 @@ type Talent = {
   email: string;
   number: string;
   age: string;
-  countryOg: string;
+  countryOrigin: string;
   countryTrained: string;
   volunteerHours: string;
   eventType: string;
   talent: string;
 };
 
-//TODO: Delete after get api works
-// const arr: Talent[] = [
-//   {
-//     name: "Ikenna",
-//     event: "Community engagement",
-//     talent: "Cleaning",
-//   },
-//   {
-//     name: "Blessing",
-//     event: "Caring for the sick",
-//     talent: "Driving",
-//   },
-//   {
-//     name: "Josh",
-//     event: "HACKVAN",
-//     talent: "database",
-//   },
-// ];
+const getCoordinatesForCountry = (country: string): [number, number] => {
+  // TODO: replace this with a real geocoding API call
+  const countryCoordinates: Record<string, [number, number]> = {
+    "USA": [-98.5795, 39.8283],
+    "Canada": [-106.3468, 56.1304],
+    "Nigeria": [8.6753, 9.0820],
+    "Korea": [127.7669, 35.9078],
+    "Japan": [138.2529, 36.2048],
+    "Spain": [-3.7038, 40.4168],
+    "Germany": [10.4515, 51.1657],
+    "France": [2.2137, 46.6034],
+    "Brazil": [-51.9253, -14.2350],
+    "Australia": [133.7751, -25.2744],
+    // Add more countries as needed
+  };
+  return countryCoordinates[country] || [49, 123]; // Default to Vancouver if country not found
+};
+
 const Home = () => {
   const [viewState, setViewState] = useState({
     longitude: -123.116226,
@@ -73,7 +73,6 @@ const Home = () => {
 
   const [mapData, setMapData] = useState<any | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<any | null>(null);
-  const [talents, setTalents] = useState<Talent[]>([]);
   const [filteredTalents, setFilteredTalents] = useState<Talent[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -90,22 +89,6 @@ const Home = () => {
 
     fetchData();
   }, []);
-
-  // useEffect(() => {
-  //   const fetchAllTalents = async () => {
-  //     try {
-  //       const response = await fetch('http://localhost:8080/volunteers');
-  //       if (!response.ok) throw new Error('Network response was not ok');
-  //       const data = await response.json();
-  //       setTalents(data);
-  //       setFilteredTalents(data); // Initially show all talents
-  //     } catch (error) {
-  //       console.error('Error fetching talents:', error);
-  //     }
-  //   };
-
-  //   fetchAllTalents();
-  // }, []);
 
   useEffect(() => {
     const fetchFilteredTalents = async () => {
@@ -130,7 +113,22 @@ const Home = () => {
     };
   
     fetchFilteredTalents();
-  }, [searchQuery]);  
+  }, [searchQuery]);
+
+  const markers = filteredTalents.map((talent, index) => {
+    const [longitude, latitude] = getCoordinatesForCountry(talent.countryOrigin);
+    return (
+      <Marker
+        key={index}
+        longitude={longitude}
+        latitude={latitude}
+        onClick={(e) => {
+          e.originalEvent.stopPropagation();
+          setSelectedMarker(talent);
+        }}
+      />
+    );
+  });
 
   return (
     <div className="w-screen h-screen flex flex-col gap-7 px-10 py-10">
@@ -155,7 +153,7 @@ const Home = () => {
                 <h2 className="text-xl font-bold">{talent.name}</h2>
                   <h3>Email: {talent.email}</h3>
                   <h3>Phone#: {talent.number}</h3>
-                  <h3>Country: {talent.countryTrained}</h3>
+                  <h3>Country: {talent.countryOrigin}</h3>
                   <h3>Volunteer Hours: {talent.volunteerHours}</h3>
                   <h3>Event Type: {talent.eventType}</h3>
                   <Button variant={"outline"} className="w-fit">
@@ -178,7 +176,7 @@ const Home = () => {
           mapStyle={"mapbox://styles/mapbox/standard"}
           mapboxAccessToken="pk.eyJ1IjoidGVjaC1zbWFydCIsImEiOiJjbDRkb3N1ZmUwNnVyM2NvNGJvZm5zbGgyIn0.20vn-YbuIy33qBQ5s9-Jeg"
         >
-          {mapData?.features.map((feature: any, index: any) => (
+          {/* {mapData?.features.map((feature: any, index: any) => (
             <Marker
               key={index}
               longitude={feature.geometry.coordinates[0]}
@@ -189,23 +187,23 @@ const Home = () => {
                 setSelectedMarker(feature);
               }}
             />
-          ))}
+          ))} */}
+          {markers}
 
           {selectedMarker && (
             <Popup
-              className="p-0"
-              longitude={selectedMarker.geometry.coordinates[0]}
-              latitude={selectedMarker.geometry.coordinates[1]}
-              anchor="top"
-              onClose={() => setSelectedMarker(null)}
-            >
-              <div className="flex flex-col gap-3">
-                <img src={p1} className="w-72 object-cover h-32"></img>
-
-                <div className="flex flex-col gap-2">
-                  <h2>{selectedMarker.properties.name}</h2>
-                  <h2>{`${selectedMarker.properties.pledges} pledged`}</h2>
-                </div>
+            className="p-0"
+            longitude={getCoordinatesForCountry(selectedMarker.countryOrigin)[0]}
+            latitude={getCoordinatesForCountry(selectedMarker.countryOrigin)[1]}
+            anchor="top"
+            onClose={() => setSelectedMarker(null)}
+          >
+            <div className="flex flex-col gap-3">
+              <img src={p1} className="w-72 object-cover h-32" alt="Talent" />
+              <div className="flex flex-col gap-2">
+                <h2>{selectedMarker.name}</h2>
+                <h2>{`${selectedMarker.volunteerHours} hours volunteered`}</h2>
+              </div>
               </div>
             </Popup>
           )}
