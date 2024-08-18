@@ -14,6 +14,7 @@ export interface FormattedData {
   location: string;
   eventType: string;
   talents: string;
+  name: string;
 }
 
 // Coordinates for countries
@@ -84,6 +85,7 @@ export const fetchGoogleSheetsData = async (): Promise<GoogleSheetData> => {
       location: row[headers.indexOf("Where do you reside?")],
       eventType: row[headers.indexOf("Type of Event")],
       talents: row[headers.indexOf("Talents")],
+      name: row[headers.indexOf("Names")],
     }));
 
     // Initialize variables for calculations
@@ -135,6 +137,8 @@ export const fetchGoogleSheetsData = async (): Promise<GoogleSheetData> => {
                 },
                 properties: {
                   talents: item.talents,
+                  name: item.name,
+                  pledges: item.pledges,
                 },
               };
             }
