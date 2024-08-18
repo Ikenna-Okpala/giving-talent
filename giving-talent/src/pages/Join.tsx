@@ -17,7 +17,7 @@ type FormData = {
   email: string;
   number: string;
   age: string;
-  countryOg: string;
+  countryOrigin: string;
   countryTrained: string;
   volunteerHours: string;
   eventType: string;
@@ -32,7 +32,7 @@ const JoinVolunteer = () => {
     email: "",
     number: "",
     age: "",
-    countryOg: "",
+    countryOrigin: "",
     countryTrained: "",
     eventType: "",
     volunteerHours: "",
@@ -55,7 +55,7 @@ const JoinVolunteer = () => {
     console.log("Form data to be submitted:", JSON.stringify(formData, null, 2));
     // Perform POST request to your API
     try {
-      const response = await fetch("http://localhost:8080/volunteers", { //TODO: correct api endpoint
+      const response = await fetch("https://giving-talent-qscn72z4ba-uc.a.run.app/volunteers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
