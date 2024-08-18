@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 )
@@ -15,11 +14,11 @@ var TWO_ID string
 
 func main() {
 
-	err:= godotenv.Load(".env")
+	godotenv.Load(".env")
 
-	if err != nil {
-		log.Fatalf("env vars failed")
-	}
+	// if err != nil {
+	// 	log.Fatalf("env vars failed")
+	// }
 
 	TWO_AUTH = os.Getenv("TWO_AUTH")
 	TWO_ID = os.Getenv("TWO_ID")
