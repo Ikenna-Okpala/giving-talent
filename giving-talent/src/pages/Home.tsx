@@ -91,42 +91,46 @@ const Home = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchAllTalents = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/volunteers');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        setTalents(data);
-        setFilteredTalents(data); // Initially show all talents
-      } catch (error) {
-        console.error('Error fetching talents:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchAllTalents = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:8080/volunteers');
+  //       if (!response.ok) throw new Error('Network response was not ok');
+  //       const data = await response.json();
+  //       setTalents(data);
+  //       setFilteredTalents(data); // Initially show all talents
+  //     } catch (error) {
+  //       console.error('Error fetching talents:', error);
+  //     }
+  //   };
 
-    fetchAllTalents();
-  }, []);
+  //   fetchAllTalents();
+  // }, []);
 
   useEffect(() => {
     const fetchFilteredTalents = async () => {
-      if (!searchQuery) {
-        setFilteredTalents(talents); // If no search query, show all talents
-        return;
-      }
-
       try {
-        const query = `?talent=${encodeURIComponent(searchQuery)}`;
-        const response = await fetch(`http://localhost:8080/volunteers${query}`); // Fetch filtered talents
-        if (!response.ok) throw new Error('Network response was not ok');
+        // If there's no search query, fetch all talents
+        const url = searchQuery
+          ? `http://localhost:8080/volunteers/${encodeURIComponent(searchQuery)}`
+          : 'http://localhost:8080/volunteers';
+        
+        const response = await fetch(url);
+        console.log(response);
+        if (!response.ok) throw new Error("Network response was not ok");
+        
         const data = await response.json();
+        console.log(data);
+        
+        // Update the state with fetched data
         setFilteredTalents(data);
       } catch (error) {
         console.error('Error fetching filtered talents:', error);
       }
     };
-
+  
     fetchFilteredTalents();
-  }, [searchQuery, talents]); // Trigger fetch when searchQuery or talents changes
+  }, [searchQuery]);  
 
   return (
     <div className="w-screen h-screen flex flex-col gap-7 px-10 py-10">
@@ -143,26 +147,28 @@ const Home = () => {
             <Button variant="outline">Send</Button>
           </div>
 
-          <div className="flex flex-col gap-3 pt-8">
-            {filteredTalents.map((talent, index) => (
-              <div key={talent.name} className="flex flex-col gap-2 shadow-md p-3 rounded-lg">
-                <img src={p1} className="w-72 object-cover h-32"></img>
-                <h2>{talent.name}</h2>
-                <h3>Email: {talent.email}</h3>
-                <h3>Number: {talent.number}</h3>
-                <h3>Age: {talent.age}</h3>
-                <h3>Country of Origin: {talent.countryOg}</h3>
-                <h3>Country Trained: {talent.countryTrained}</h3>
-                <h3>Volunteer Hours: {talent.volunteerHours}</h3>
-                <h3>Event Type: {talent.eventType}</h3>
-                <Button variant={"outline"} className="w-fit">
-                  Reach out
-                </Button>
-                <Badge variant={"outline"} className="w-fit">
-                  {talent.talent}
-                </Badge>
-              </div>
-            ))}
+          <div className="talent-list-container flex flex-col gap-3 pt-8">
+            {filteredTalents.length > 0 ? (
+              filteredTalents.map((talent) => (
+                <div key={talent.name} className="talent-box flex flex-col gap-2 shadow-md p-3 rounded-lg">
+                <img src={p1} className="talent-img w-72 object-cover h-32" alt="Talent"></img>
+                <h2 className="text-xl font-bold">{talent.name}</h2>
+                  <h3>Email: {talent.email}</h3>
+                  <h3>Phone#: {talent.number}</h3>
+                  <h3>Country: {talent.countryTrained}</h3>
+                  <h3>Volunteer Hours: {talent.volunteerHours}</h3>
+                  <h3>Event Type: {talent.eventType}</h3>
+                  <Button variant={"outline"} className="w-fit">
+                    Reach out
+                  </Button>
+                  <Badge variant={"outline"} className="w-fit">
+                    {talent.talent}
+                  </Badge>
+                </div>
+              ))
+            ) : (
+              <p>No talents found.</p>
+            )}
           </div>
         </div>
         <Map

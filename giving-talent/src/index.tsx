@@ -8,12 +8,12 @@ import Join from "./pages/Join";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/dashboard",
     element: <Home />,
   },
 
   {
-    path: "/join-us",
+    path: "/",
     element: <Join />,
   },
 ]);
