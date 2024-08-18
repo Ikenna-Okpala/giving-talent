@@ -14,5 +14,7 @@ func main() {
 
 	app.Post("/volunteers", h.CreateVolunteer)
 
+	app.Get("/volunteers", h.GetVolunteers)
+
 	app.Listen("localhost:8080")
 }

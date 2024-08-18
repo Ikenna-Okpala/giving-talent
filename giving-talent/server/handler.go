@@ -34,3 +34,17 @@ func (h Handler) CreateVolunteer(c *fiber.Ctx) error {
 
 	return c.SendStatus(fiber.StatusCreated)
 }
+
+func (h Handler) GetVolunteers(c *fiber.Ctx) error {
+
+	var volunteers [] Volunteer
+	
+	result:= h.db.Find(&volunteers)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		return fiber.NewError(fiber.StatusInternalServerError, "Server failure")
+	}
+
+	return c.JSON(volunteers)
+}
