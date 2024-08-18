@@ -112,8 +112,8 @@ const Home = () => {
       try {
         // If there's no search query, fetch all talents
         const url = searchQuery
-          ? `http://localhost:8080/volunteers/${encodeURIComponent(searchQuery)}`
-          : 'http://localhost:8080/volunteers';
+          ? `https://giving-talent-qscn72z4ba-uc.a.run.app/volunteers/${encodeURIComponent(searchQuery)}`
+          : 'https://giving-talent-qscn72z4ba-uc.a.run.app/volunteers';
         
         const response = await fetch(url);
         console.log(response);

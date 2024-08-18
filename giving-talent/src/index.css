@@ -18,6 +18,6 @@ code {
 
 /* Assuming you are using Tailwind CSS, add these to your configuration or global CSS file */
 .talent-list-container {
-  max-height: 600px; /* Set a fixed height for the scrollable container */
+  max-height: 550px; /* Set a fixed height for the scrollable container */
   overflow-y: auto; /* Enable vertical scrolling */
 }
